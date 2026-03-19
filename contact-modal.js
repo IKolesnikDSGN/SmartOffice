@@ -9,11 +9,13 @@ export function initContactModal() {
   function openModal() {
     modal.classList.add('is_opened');
     if (wrap) wrap.classList.add('is_opened');
+    window.lenis?.stop();
   }
 
   function closeModal() {
     modal.classList.remove('is_opened');
     if (wrap) wrap.classList.remove('is_opened');
+    window.lenis?.start();
   }
 
   // Open on [data-modal]
