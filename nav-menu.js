@@ -16,7 +16,6 @@ export function initNavMenu() {
     navContain.querySelector('.nav_desktop_logo'),
     navContain.querySelector('.nav_id_text-wrap'),
     navContain.querySelector('.burger_icon'),
-    document.querySelector('.nav_cta_btn'),
   ].filter(Boolean);
 
   // State
@@ -88,7 +87,9 @@ export function initNavMenu() {
     }
 
     if (source === 'scroll') {
-      scrollClassEls.slice().reverse().forEach((el, i) => {
+      const ctaBtn = document.querySelector('.nav_cta_btn');
+      const els = ctaBtn ? [...scrollClassEls, ctaBtn] : scrollClassEls;
+      els.slice().reverse().forEach((el, i) => {
         const call = gsap.delayedCall(i * 0.08, () => el.classList.add('is_footer'));
         scrollCalls.push(call);
       });
@@ -125,7 +126,8 @@ export function initNavMenu() {
     if (source === 'scroll') {
       scrollCalls.forEach((c) => c.kill());
       scrollCalls = [];
-      scrollClassEls.forEach((el) => el.classList.remove('is_footer'));
+      const ctaBtn = document.querySelector('.nav_cta_btn');
+      [...scrollClassEls, ...(ctaBtn ? [ctaBtn] : [])].forEach((el) => el.classList.remove('is_footer'));
     }
   }
 
