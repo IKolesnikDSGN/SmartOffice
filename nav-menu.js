@@ -16,6 +16,7 @@ export function initNavMenu() {
     navContain.querySelector('.nav_desktop_logo'),
     navContain.querySelector('.nav_id_text-wrap'),
     navContain.querySelector('.burger_icon'),
+    navContain.querySelector('.nav_cta_btn'),
   ].filter(Boolean);
 
   // State
