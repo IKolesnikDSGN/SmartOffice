@@ -48,6 +48,12 @@ export function initAccordion() {
       content.setAttribute("id", "accordion_content_" + listIndex + "_" + cardIndex);
       button.setAttribute("aria-controls", content.id);
       content.setAttribute("aria-labelledby", button.id);
+
+      // Init reveal timelines while content is still visible so SplitText can measure lines
+      const revealElements = content.querySelectorAll("[data-accordion-reveal]");
+      const revealTimelines = new Map();
+      revealElements.forEach((el) => revealTimelines.set(el, lineReveal(el)));
+
       content.style.display = "none";
 
       const refresh = () => {
@@ -57,9 +63,6 @@ export function initAccordion() {
       const tl = gsap.timeline({ paused: true, defaults: { duration: 0.3, ease: "power1.inOut" }, onComplete: refresh, onReverseComplete: refresh });
       tl.set(content, { display: "block" });
       tl.fromTo(content, { height: 0 }, { height: "auto" });
-
-      const revealElements = content.querySelectorAll("[data-accordion-reveal]");
-      const revealTimelines = new Map();
 
       const closeAccordion = () => card.classList.contains("is-active") && (card.classList.remove("is-active"), tl.reverse(), button.setAttribute("aria-expanded", "false"));
       closeFunctions[cardIndex] = closeAccordion;
@@ -72,11 +75,7 @@ export function initAccordion() {
         instant ? tl.progress(1) : tl.play();
 
         revealElements.forEach((el) => {
-          if (!revealTimelines.has(el)) {
-            revealTimelines.set(el, lineReveal(el));
-          }
-          const revealTl = revealTimelines.get(el);
-          if (revealTl) revealTl.restart();
+          revealTimelines.get(el)?.restart();
         });
       };
       if (openByDefault === cardIndex + 1) openAccordion(true);
