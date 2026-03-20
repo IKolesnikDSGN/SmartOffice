@@ -7,7 +7,7 @@
  * @returns {gsap.core.Timeline}
  */
 export function lineReveal(element) {
-  let tl;
+  let currentTl;
 
   SplitText.create(element, {
     type: "lines",
@@ -15,7 +15,7 @@ export function lineReveal(element) {
     mask: "lines",
     linesClass: "line",
     onSplit(self) {
-      tl = gsap
+      currentTl = gsap
         .timeline({ paused: true })
         .from(self.lines, {
           yPercent: 110,
@@ -24,11 +24,16 @@ export function lineReveal(element) {
           ease: "expo.out",
           stagger: { each: 0.045 },
         });
-      return tl;
+      return currentTl;
     },
   });
 
   gsap.set(element, { visibility: "visible" });
 
-  return tl;
+  // Return a controller so callers always use the latest timeline
+  // even after autoSplit re-fires onSplit on visibility change
+  return {
+    restart() { currentTl?.restart(); },
+    play()    { currentTl?.play(); },
+  };
 }
