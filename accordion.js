@@ -57,6 +57,7 @@ export function initAccordion() {
       const refresh = () => {
         tl.invalidate();
         if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
+        window.lenis?.resize();
       };
       const tl = gsap.timeline({ paused: true, defaults: { duration: 0.3, ease: "power1.inOut" }, onComplete: refresh, onReverseComplete: refresh });
       tl.set(content, { display: "block" });
