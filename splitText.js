@@ -8,6 +8,7 @@
  */
 export function lineReveal(element) {
   let currentTl;
+  let pendingPlay = false;
 
   SplitText.create(element, {
     type: "lines",
@@ -24,16 +25,24 @@ export function lineReveal(element) {
           ease: "expo.out",
           stagger: { each: 0.045 },
         });
+      if (pendingPlay) {
+        currentTl.play();
+        pendingPlay = false;
+      }
       return currentTl;
     },
   });
 
   gsap.set(element, { visibility: "visible" });
 
-  // Return a controller so callers always use the latest timeline
-  // even after autoSplit re-fires onSplit on visibility change
   return {
-    restart() { currentTl?.restart(); },
-    play()    { currentTl?.play(); },
+    restart() {
+      if (currentTl) currentTl.restart();
+      else pendingPlay = true;
+    },
+    play() {
+      if (currentTl) currentTl.play();
+      else pendingPlay = true;
+    },
   };
 }
