@@ -9,28 +9,41 @@ export function initAccordion() {
     const revealElements = content.querySelectorAll('[data-accordion-reveal]');
     const revealTimelines = new Map();
 
+    let debounceTimer = null;
+    let observer = null;
+
     button.addEventListener('click', () => {
       const opening = !content.classList.contains('is_opened');
       content.classList.toggle('is_opened');
 
-      content.addEventListener('transitionend', function onEnd(e) {
-        if (e.target !== content) return;
-        content.removeEventListener('transitionend', onEnd);
+      if (observer) {
+        observer.disconnect();
+        clearTimeout(debounceTimer);
+      }
 
-        window.lenis?.resize();
+      observer = new ResizeObserver(() => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          observer.disconnect();
+          observer = null;
 
-        if (opening) {
-          revealElements.forEach((el) => {
-            if (!revealTimelines.has(el)) {
-              const controller = lineReveal(el);
-              revealTimelines.set(el, controller);
-              controller.play();
-            } else {
-              revealTimelines.get(el)?.restart();
-            }
-          });
-        }
+          window.lenis?.resize();
+
+          if (opening) {
+            revealElements.forEach((el) => {
+              if (!revealTimelines.has(el)) {
+                const controller = lineReveal(el);
+                revealTimelines.set(el, controller);
+                controller.play();
+              } else {
+                revealTimelines.get(el)?.restart();
+              }
+            });
+          }
+        }, 50);
       });
+
+      observer.observe(content);
     });
   });
 }

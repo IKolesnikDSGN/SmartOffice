@@ -16,6 +16,7 @@ export function lineReveal(element) {
     mask: "lines",
     linesClass: "line",
     onSplit(self) {
+      currentTl?.kill();
       currentTl = gsap
         .timeline({ paused: true })
         .from(self.lines, {
