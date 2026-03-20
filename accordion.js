@@ -49,10 +49,8 @@ export function initAccordion() {
       button.setAttribute("aria-controls", content.id);
       content.setAttribute("aria-labelledby", button.id);
 
-      // Init reveal timelines while content is still visible so SplitText can measure lines
       const revealElements = content.querySelectorAll("[data-accordion-reveal]");
       const revealTimelines = new Map();
-      revealElements.forEach((el) => revealTimelines.set(el, lineReveal(el)));
 
       content.style.display = "none";
 
@@ -74,8 +72,16 @@ export function initAccordion() {
         card.classList.add("is-active");
         instant ? tl.progress(1) : tl.play();
 
-        revealElements.forEach((el) => {
-          revealTimelines.get(el)?.restart();
+        requestAnimationFrame(() => {
+          revealElements.forEach((el) => {
+            if (!revealTimelines.has(el)) {
+              const controller = lineReveal(el);
+              revealTimelines.set(el, controller);
+              controller.play();
+            } else {
+              revealTimelines.get(el)?.restart();
+            }
+          });
         });
       };
       if (openByDefault === cardIndex + 1) openAccordion(true);
