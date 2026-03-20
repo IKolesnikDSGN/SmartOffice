@@ -10,14 +10,16 @@ export function initAccordion() {
     const revealTimelines = new Map();
 
     button.addEventListener('click', () => {
-      const isOpen = content.classList.contains('is_opened');
+      const opening = !content.classList.contains('is_opened');
+      content.classList.toggle('is_opened');
 
-      if (isOpen) {
-        content.classList.remove('is_opened');
+      content.addEventListener('transitionend', function onEnd(e) {
+        if (e.target !== content) return;
+        content.removeEventListener('transitionend', onEnd);
+
         window.lenis?.resize();
-      } else {
-        content.classList.add('is_opened');
-        requestAnimationFrame(() => {
+
+        if (opening) {
           revealElements.forEach((el) => {
             if (!revealTimelines.has(el)) {
               const controller = lineReveal(el);
@@ -27,9 +29,8 @@ export function initAccordion() {
               revealTimelines.get(el)?.restart();
             }
           });
-          window.lenis?.resize();
-        });
-      }
+        }
+      });
     });
   });
 }
