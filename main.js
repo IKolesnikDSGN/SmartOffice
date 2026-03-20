@@ -6,6 +6,7 @@ import { initNavMenu } from './nav-menu.js';
 import { initParallax } from './parallax.js';
 import { initFooterSvg } from './footer-svg.js';
 import { initContactModal } from './contact-modal.js';
+import { initAccordion } from './accordion.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initPageLoading();
@@ -15,4 +16,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initParallax();
   initFooterSvg();
   initContactModal();
+  initAccordion();
 });
