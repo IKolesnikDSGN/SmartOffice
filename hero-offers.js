@@ -220,18 +220,18 @@ export function initHeroOffers() {
   // All positions use "top+=Xvh top": the point Xvh below hero_layout's top
   // reaching the viewport top.
 
-  // Positions as % of hero_layout's height (700vh → 33.33% = 233.33vh).
-  // ScrollTrigger parses vh as px, so % is the reliable unit here.
-  const T1 = 'top+=28% top'; // 1/3 boundary
-  const T2 = 'top+=56% top'; // 2/3 boundary
+  // Positions as % of hero_layout's height — dynamic for any number of offers.
+  const n = offers.length;
+  const thresholds = offers.map((_, i) =>
+    i === 0 ? 'top top' : `top+=${Math.round(i / n * 100)}% top`
+  );
 
   // Each segment: which offer to animate + its scroll range.
   // Segments[i] maps to offers[i].
-  const segments = [
-    { start: 'top top', end: T1 },
-    { start: T1,        end: T2 },
-    { start: T2,        end: 'bottom top' },
-  ];
+  const segments = offers.map((_, i) => ({
+    start: thresholds[i],
+    end: i === n - 1 ? 'bottom top' : thresholds[i + 1],
+  }));
 
   // ── Per-offer: visual scale + divider width (scrub) ───────────────────────
   offers.forEach((offer, i) => {
@@ -253,10 +253,11 @@ export function initHeroOffers() {
 
   // ── Reveal/hide triggers at segment boundaries ────────────────────────────
   // boundaries[i]: reveal offers[i+1] when crossing, restore offers[i] on back.
-  const boundaries = [
-    { start: T1, revealIndex: 1, prevNavIndex: 0 },
-    { start: T2, revealIndex: 2, prevNavIndex: 1 },
-  ];
+  const boundaries = offers.slice(1).map((_, i) => ({
+    start: thresholds[i + 1],
+    revealIndex: i + 1,
+    prevNavIndex: i,
+  }));
 
   boundaries.forEach(({ start, revealIndex, prevNavIndex }) => {
     ScrollTrigger.create({
