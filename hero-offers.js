@@ -27,6 +27,16 @@ export function initHeroOffers() {
   // Sync nav-bar text with offer[0] data on init (no animation)
   syncNavDirect(0);
 
+  // Navigate when btnWrap has href (div doesn't follow href natively)
+  const btnWrap = nav?.querySelector('[hero-nav-btn]');
+  if (btnWrap) {
+    btnWrap.addEventListener('click', () => {
+      if (btnWrap.hasAttribute('data-case-link')) return; // handled by case-modal.js
+      const href = btnWrap.getAttribute('href');
+      if (href) window.location.href = href;
+    });
+  }
+
   // ─── Helpers ───────────────────────────────────────────────────────────────
 
   /**
@@ -45,6 +55,17 @@ export function initHeroOffers() {
       const label = src.querySelector('[hero-nav-btn]')?.textContent?.trim() ?? '';
       targets.btnText.textContent = label;
       if (targets.btn) targets.btn.setAttribute('aria-label', label);
+    }
+
+    const action = src.querySelector('[hero-nav-btn-action]')?.textContent?.trim() ?? '';
+    if (targets.btnWrap) {
+      targets.btnWrap.removeAttribute('data-modal');
+      targets.btnWrap.removeAttribute('href');
+      if (action === 'data-modal') {
+        targets.btnWrap.setAttribute('data-modal', '');
+      } else if (action.startsWith('/')) {
+        targets.btnWrap.setAttribute('href', action);
+      }
     }
   }
 
@@ -100,6 +121,7 @@ export function initHeroOffers() {
         const text1Text = src.querySelector('[hero-nav-text1]')?.textContent ?? '';
         const text2Text = src.querySelector('[hero-nav-text2]')?.textContent ?? '';
         const label     = src.querySelector('[hero-nav-btn]')?.textContent?.trim() ?? '';
+        const action    = src.querySelector('[hero-nav-btn-action]')?.textContent?.trim() ?? '';
 
         if (t.address) revealNavText(t.address, addrText,  0);
         if (t.text1)   revealNavText(t.text1,   text1Text, 0.05);
@@ -125,6 +147,16 @@ export function initHeroOffers() {
             { opacity: 0, yPercent: 60 },
             { opacity: 1, yPercent: 0, duration: 0.6, ease: 'expo.out', delay: 0.15 }
           );
+        }
+
+        if (t.btnWrap) {
+          t.btnWrap.removeAttribute('data-modal');
+          t.btnWrap.removeAttribute('href');
+          if (action === 'data-modal') {
+            t.btnWrap.setAttribute('data-modal', '');
+          } else if (action.startsWith('/')) {
+            t.btnWrap.setAttribute('href', action);
+          }
         }
       },
     });

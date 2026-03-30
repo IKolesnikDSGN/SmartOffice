@@ -6,9 +6,15 @@ import { initNavMenu } from './nav-menu.js';
 import { initParallax } from './parallax.js';
 import { initFooterSvg } from './footer-svg.js';
 import { initContactModal } from './contact-modal.js';
+import { initCaseModal } from './case-modal.js';
 import { initAccordion } from './accordion.js';
+import { initDrawSvg } from './draw-svg.js';
+import { initRotateY } from './rotate-y.js';
+import { initHeroNavLinks } from './hero-nav-links.js';
+import { initPageTransition } from './page-transition.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+  initHeroNavLinks();
   initPageLoading();
   initTrustHeading();
   initHeroOffers();
@@ -16,5 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initParallax();
   initFooterSvg();
   initContactModal();
+  initCaseModal();
   initAccordion();
+  initDrawSvg();
+  initRotateY();
+  initPageTransition();
 });

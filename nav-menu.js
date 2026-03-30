@@ -48,14 +48,32 @@ export function initNavMenu() {
   if (allLines.length) gsap.set(allLines, { yPercent: 110 });
 
   // ─── Container timeline (size only) — reversed on close ──────────────────
+  // Desktop: animate width + height. Mobile: height only (width stays as-is).
 
-  const tl = gsap
-    .timeline({ paused: true })
-    .to(
-      navContain,
-      { width: '24rem', height: 'auto', duration: 0.8, ease: 'expo.inOut' },
-      0
-    );
+  let tl;
+
+  gsap.matchMedia().add(
+    {
+      desktop: '(min-width: 768px)',
+      mobile:  '(max-width: 767px)',
+    },
+    (ctx) => {
+      const { desktop } = ctx.conditions;
+      tl = gsap
+        .timeline({ paused: true })
+        .to(
+          navContain,
+          {
+            ...(desktop ? { width: '24rem' } : {}),
+            height: 'auto',
+            duration: 0.8,
+            ease: 'expo.inOut',
+          },
+          0
+        );
+      return () => { tl?.kill(); tl = null; };
+    }
+  );
 
   // ─── Open / Close ─────────────────────────────────────────────────────────
 
@@ -65,7 +83,7 @@ export function initNavMenu() {
     openSource = source;
 
     // Container
-    tl.play();
+    tl?.play();
 
     // Text: explicit fromTo so it's fresh on every open regardless of prior state
     if (allLines.length) {
@@ -104,7 +122,7 @@ export function initNavMenu() {
     openSource   = null;
 
     // Container
-    tl.reverse();
+    tl?.reverse();
 
     // Text: slide back behind mask
     if (allLines.length) {

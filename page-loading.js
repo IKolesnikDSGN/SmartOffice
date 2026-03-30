@@ -16,8 +16,10 @@ export function initPageLoading() {
   const isHardReload = navEntry?.type === 'reload' && navEntry?.transferSize > 0;
   const hasAnimated = sessionStorage.getItem('pageLoadingDone');
 
-  if (hasAnimated && !isHardReload) {
-    // Soft reload → show final state immediately
+  const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+  if ((hasAnimated && !isHardReload) || isMobile) {
+    // Soft reload or mobile → show final state immediately
     gsap.set(loadingOverlay, { autoAlpha: 0 });
     if (heroInfo) {
       heroInfo.querySelectorAll('[data-loading-reveal]').forEach((el) => {

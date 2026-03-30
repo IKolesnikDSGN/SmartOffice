@@ -10,34 +10,36 @@ export function lineReveal(element) {
   let currentTl;
   let pendingPlay = false;
 
+  gsap.set(element, { visibility: 'hidden' });
+
   SplitText.create(element, {
-    type: "lines",
+    type: 'lines',
     autoSplit: true,
-    mask: "lines",
-    linesClass: "line",
+    mask: 'lines',
+    linesClass: 'line',
     onSplit(self) {
       currentTl?.kill();
       currentTl = gsap
         .timeline({ paused: true })
-        .from(self.lines, {
-          yPercent: 110,
+        .set(element, { visibility: 'visible' })
+        .set(self.lines, { yPercent: 110 })
+        .to(self.lines, {
+          yPercent: 0,
           delay: 0.2,
           duration: 1,
-          ease: "expo.out",
+          ease: 'expo.out',
           stagger: { each: 0.045 },
         });
       if (pendingPlay) {
         currentTl.play();
         pendingPlay = false;
       }
-      return currentTl;
     },
   });
 
-  gsap.set(element, { visibility: "visible" });
-
   return {
     restart() {
+      gsap.set(element, { visibility: 'hidden' });
       if (currentTl) currentTl.restart();
       else pendingPlay = true;
     },

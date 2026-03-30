@@ -3,6 +3,15 @@ import { initLenis } from './lenis.js';
 
 
 document.addEventListener('DOMContentLoaded', () => {
+  // On non-home pages (no hero), remove is_scrolled immediately
+  if (!document.querySelector('.hero_layout')) {
+    document.querySelectorAll('[nav-scrolled]').forEach((el) => {
+      el.classList.remove('is_scrolled');
+    });
+    const letterEls = document.querySelectorAll('[nav-scrolled-letter]');
+    if (letterEls.length) gsap.set(letterEls, { opacity: 0 });
+  }
+
   initLenis();
   window.lenis.stop();
 
