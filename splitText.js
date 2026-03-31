@@ -22,7 +22,7 @@ export function lineReveal(element) {
       currentTl = gsap
         .timeline({ paused: true })
         .set(element, { visibility: 'visible' })
-        .set(self.lines, { yPercent: 110 })
+        .set(self.lines, { yPercent: 125 })
         .to(self.lines, {
           yPercent: 0,
           delay: 0.2,
