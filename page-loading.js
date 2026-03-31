@@ -93,7 +93,7 @@ export function initPageLoading() {
     if (allLines.length) {
       gsap.fromTo(
         allLines,
-        { yPercent: 110 },
+        { yPercent: 125 },
         { yPercent: 0, duration: 1.4, ease: 'expo.out', delay: 0.2, stagger: { each: 0.055 } }
       );
     }
