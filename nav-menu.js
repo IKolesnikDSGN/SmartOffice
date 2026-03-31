@@ -159,6 +159,11 @@ export function initNavMenu() {
     });
   }
 
+  // Close on link click inside menu
+  navContain.addEventListener('click', (e) => {
+    if (e.target.closest('a[href]')) closeMenu();
+  });
+
   // Close on click outside — only when menu was opened by click
   document.addEventListener('click', (e) => {
     if (isOpen && openSource === 'click' && !navContain.contains(e.target)) {
