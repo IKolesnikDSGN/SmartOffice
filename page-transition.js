@@ -22,6 +22,7 @@ export function initPageTransition() {
     try {
       const url = new URL(href, location.href);
       if (url.origin !== location.origin) return;
+      if (url.pathname === location.pathname) return;
     } catch {
       return;
     }
